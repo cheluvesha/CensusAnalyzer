@@ -12,8 +12,16 @@ class CensusAnalyzerTest extends FunSuite {
 
   test("IfFilePathIsWrong_ReturnsIncorrectFilePathException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo("./src/scala/CensusAnalyzerProject/Resources/IndiaStateCensusData.csv")
+      CensusAnalyzerObj.loadCSVInfo("/home/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusData.csv")
     }
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectPath.toString)
+  }
+
+  test("IfFileTypeIsWrong_ReturnsIncorrectFileException") {
+    val thrown = intercept[Exception] {
+      val objCensus = new CensusAnalyzer()
+      objCensus.loadCSVInfo("/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusData.pdf")
+    }
+    assert(thrown.getMessage == CensusAnalyzerExceptionEnum.InCorrectFile.toString)
   }
 }
