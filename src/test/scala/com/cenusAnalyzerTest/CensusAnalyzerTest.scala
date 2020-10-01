@@ -37,4 +37,5 @@ class CensusAnalyzerTest extends FunSuite {
     }
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFields.toString)
   }
+
 }
