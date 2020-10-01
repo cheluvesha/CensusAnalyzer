@@ -26,8 +26,15 @@ class CensusAnalyzerTest extends FunSuite {
 
   test("IfFileDelimiterWrong_ReturnsIncorrectDelimiterException") {
     val thrown = intercept[Exception] {
-      CensusAnalyzerObj.loadCSVInfo("/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/StateCensusData.csv")
+      CensusAnalyzerObj.loadCSVInfo("/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusDataDelimeter.csv")
     }
-    assert(thrown.getMessage == CensusAnalyzerExceptionEnum.InCorrectDelimiter.toString)
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectDelimiter.toString)
+  }
+
+  test("IfInputFileFieldsWrong_ReturnsIncorrectFieldsException") {
+    val thrown = intercept[Exception] {
+      CensusAnalyzerObj.loadCSVInfo("/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusDataInvalidField.csv")
+    }
+    assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFields.toString)
   }
 }
