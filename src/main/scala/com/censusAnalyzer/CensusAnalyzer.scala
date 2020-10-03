@@ -1,97 +1,49 @@
 package com.censusAnalyzer
-import java.util
-import java.util.Comparator
+
+import com.censusAnalyzer.Country.Country
 import com.google.gson.Gson
 
 class CensusAnalyzer {
-  var censusMap: Map[String, IndiaStateCensusDAO] = Map()
-  var censusStateMap: Map[String, IndiaStateCensusDAO] = Map()
+  var censusMap: Map[String, CensusDAO] = Map()
 
-  def loadIndiaCensusData(filePath: String): Int = {
-    censusMap = new CensusLoader().loadData(classOf[IndiaStateCensus], filePath)
+  def loadCensusData(country: Country,filepath:String*): Int = {
+    censusMap = new CensusLoader().loadData(country,filepath)
     censusMap.size
   }
 
-  def loadIndiaStateCode(filePath: String): Int = {
-    censusStateMap = new CensusLoader().loadData(classOf[StateCode], filePath)
-    censusStateMap.size
-  }
-
-  def sort(censusComparator: Comparator[IndiaStateCensusDAO]): String = {
+  def sort(choice: Int): String = {
     if (censusMap == null || censusMap.isEmpty) {
-      throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.NoCensusData)
+      throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.NoCensusData)
     }
-    val size = censusMap.size
-    val censusCSVList = censusMap.values.toArray
-    for (count <- 0 until size - 1) {
-      for (secondCount <- 0 until size - count - 1) {
-        val census1 = censusCSVList(secondCount)
-        val census2 = censusCSVList(secondCount + 1)
-        if (censusComparator.compare(census1, census2) > 0) {
-          censusCSVList(secondCount) = census2
-          censusCSVList(secondCount + 1) = census1
-        }
-      }
+    var censusCSVList = censusMap.values.toArray
+    censusCSVList = choice match {
+      case 1 => censusCSVList.sortBy(_.state)
+      case 2 => censusCSVList.sortBy(_.stateCode)
+      case 3 => censusCSVList.sortBy(_.population).reverse
+      case 4 => censusCSVList.sortBy(_.populationDensity).reverse
+      case 5 => censusCSVList.sortBy(_.totalArea).reverse
     }
     val sortedStateCensusCensus = new Gson().toJson(censusCSVList)
     sortedStateCensusCensus
   }
 
-  def getStateCodeWiseSortedCensusData():String={
-    for (stateNameCensus <- censusMap.keys;stateName <- censusStateMap.keys;if (stateName.equals(stateNameCensus))){
-      val censusData = censusMap(stateNameCensus)
-      censusData.stateCode = censusStateMap(stateName).stateCode
-    }
-    val censusComparator = new Comparator[IndiaStateCensusDAO] {
-      override def compare(censusData1: IndiaStateCensusDAO, censusData2: IndiaStateCensusDAO): Int = {
-        censusData1.stateCode.compareTo(censusData2.stateCode)
-      }
-    }
-    sort(censusComparator)
+  def getStateWiseSortedCensusData: String = {
+    sort(1)
   }
 
-  def getStateWiseSortedCensusData(): String = {
-    val censusComparator = new Comparator[IndiaStateCensusDAO] {
-      override def compare(census1: IndiaStateCensusDAO, census2: IndiaStateCensusDAO): Int = {
-        census1.state.compareTo(census2.state)
-      }
-    }
-    sort(censusComparator)
+  def getStateCodeWiseSortedCensusData: String = {
+    sort(2)
   }
 
-  def getPopulationDensityWiseSortedCensusData():String = {
-    val censusComparator = new Comparator[IndiaStateCensusDAO] {
-      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
-        obj1.densityPerSqKm.compareTo(obj2.densityPerSqKm)
-      }
-    }
-    sort(censusComparator.reversed())
+  def getPopulationWiseSortedCensusData: String = {
+    sort(3)
   }
 
-  def getPopulationWiseSortedCensusData(): String = {
-    val censusComparator = new Comparator[IndiaStateCensusDAO] {
-      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
-        obj1.population.compareTo(obj2.population)
-      }
-    }
-    sort(censusComparator.reversed())
+  def getPopulationDensityWiseSortedCensusData: String = {
+    sort(4)
   }
 
-  def getAreaWiseSortedCensusData(): String = {
-    val censusComparator = new Comparator[IndiaStateCensusDAO] {
-      override def compare(obj1: IndiaStateCensusDAO, obj2: IndiaStateCensusDAO): Int = {
-        obj1.areaInSqKm.compareTo(obj2.areaInSqKm)
-      }
-    }
-    sort(censusComparator.reversed())
-  }
-
-  def getCountRows[T](fileIterator: util.Iterator[T]):Int = {
-    var rowsCounted = 0
-    while(fileIterator.hasNext) {
-      rowsCounted += 1
-      fileIterator.next()
-    }
-    rowsCounted
+  def getAreaWiseSortedCensusData: String = {
+    sort(5)
   }
 }

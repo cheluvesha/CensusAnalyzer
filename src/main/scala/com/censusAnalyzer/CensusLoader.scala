@@ -1,37 +1,60 @@
 package com.censusAnalyzer
+import com.censusAnalyzer.Country.Country
 import java.nio.file.{Files, NoSuchFileException, Paths}
 import java.util
 
-class CensusLoader {
-  def loadData[A](csvClass: Class[A], filePaths: String*): Map[String, IndiaStateCensusDAO] = {
-    try {
-      var censusMap: Map[String, IndiaStateCensusDAO] = Map()
-      for (filePath <- filePaths) {
-        if (!filePath.endsWith(".csv")) {
-          throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.InCorrectFileType)
-        }
-        val reader = Files.newBufferedReader(Paths.get(filePath))
-        val csvBuilder = CSVBuilderFactory.createCSVBuilder()
-        if(csvClass.getName == "com.censusAnalyzer.IndiaStateCensus"){
-          val censusCSVIterator: util.Iterator[IndiaStateCensus] = csvBuilder.getCSVFileIterator(reader, classOf[IndiaStateCensus])
-          while (censusCSVIterator.hasNext){
-            val objDAO = censusCSVIterator.next()
-            censusMap += (objDAO.state -> new IndiaStateCensusDAO(objDAO))
+  class CensusLoader {
+    def loadData[A](country: Country, filePaths: Seq[String]): Map[String, CensusDAO] = {
+      try {
+        for (filePath <- filePaths) {
+          if (!filePath.endsWith(".csv")) {
+            throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.InCorrectFileType)
           }
         }
-        else if(csvClass.getName == "com.censusAnalyzer.StateCode"){
-          val censusCSVIterator: util.Iterator[StateCode] = csvBuilder.getCSVFileIterator(reader, classOf[StateCode])
-          while (censusCSVIterator.hasNext){
-            val objDAO = censusCSVIterator.next()
-            censusMap += (objDAO.sateName -> new IndiaStateCensusDAO(objDAO))
-          }
+        var censusMap: Map[String, CensusDAO] = Map()
+        val readerStateCensus = Files.newBufferedReader(Paths.get(filePaths.head))
+        val csvBuilderStateCensus = CSVBuilderFactory.createCSVBuilder()
+        if (country.equals(Country.India)) {
+          val censusCSVIteratorStateCensus: util.Iterator[IndiaCensusDTO] = csvBuilderStateCensus.getCSVFileIterator(readerStateCensus, classOf[IndiaCensusDTO])
+          censusCSVIteratorStateCensus.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO)) }
         }
+        else if (country.equals(Country.USA)) {
+          val UScensusCSVIterator: util.Iterator[USCensusDTO] = csvBuilderStateCensus.getCSVFileIterator(readerStateCensus, classOf[USCensusDTO])
+          UScensusCSVIterator.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO)) }
+        }
+        else {
+          throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.InvalidCountry)
+        }
+        if (filePaths.length == 1) {
+          return censusMap
+        }
+        loadStateCode(censusMap, filePaths(1): String)
       }
-      censusMap
+      catch {
+        case _: NoSuchFileException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.InCorrectFilePath)
+        case _: CSVBuilderException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
+        case _: CSVBuilderException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
+      }
     }
-    catch {
-      case _: NoSuchFileException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.InCorrectFilePath)
-      case _: CSVBuilderException => throw new CensusAnalyzerException(CensusAnalyzerExceptionEnums.UnableToParse)
+
+    def loadStateCode(censusMap: Map[String, CensusDAO], filePath: String): Map[String, CensusDAO] = {
+      try {
+        val readerStateCode = Files.newBufferedReader(Paths.get(filePath))
+        val CSVBuilderStateCode = CSVBuilderFactory.createCSVBuilder()
+        val censusCSVIteratorStateCode: util.Iterator[IndiaStateCodeDTO] = CSVBuilderStateCode.getCSVFileIterator(readerStateCode, classOf[IndiaStateCodeDTO])
+        var censusStateMap: Map[String, CensusDAO] = Map()
+        censusCSVIteratorStateCode.forEachRemaining { objDAO => censusStateMap += (objDAO.stateName -> new CensusDAO(objDAO)) }
+
+        for (stateNameCensus <- censusMap.keys; stateName <- censusStateMap.keys; if (stateName.equals(stateNameCensus))) {
+          val censusData = censusMap(stateNameCensus)
+          censusData.stateCode = censusStateMap(stateName).stateCode
+        }
+        censusMap
+      }
+      catch {
+        case _: NoSuchFileException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.InCorrectFilePath)
+        case _: CSVBuilderException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
+        case _: CSVBuilderException => throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.UnableToParse)
+      }
     }
   }
-}
