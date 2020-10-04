@@ -67,7 +67,7 @@ class CensusAnalyzerTest extends FunSuite {
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectFile.toString)
   }
 
-  test("InputFileDelimiterWrong_ReturnIncorrectDelimiterException") {
+  test("givenInputFileDelimiterWhenWrongShouldReturnIncorrectDelimiterException") {
     val thrown = intercept[Exception] {
       CensusAnalyzerObj.loadIndiaStateCode(InvalidStateDelimiter)
     }
