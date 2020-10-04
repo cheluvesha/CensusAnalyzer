@@ -1,5 +1,6 @@
 package com.censusAnalyzer
 
+
 import java.io.Reader
 import java.util
 import com.opencsv.bean.{CsvToBean, CsvToBeanBuilder}

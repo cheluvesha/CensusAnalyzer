@@ -1,8 +1,7 @@
 package com.censusAnalyzer
 
+
 class CSVBuilderException(message:CSVBuilderExceptionEnum.Value) extends Exception(message.toString) {}
-
-
 object CSVBuilderExceptionEnum extends Enumeration {
   type CSVBuilderException = Value
   val InCorrectPath: CSVBuilderExceptionEnum.Value = Value("Incorrect Path Specified")

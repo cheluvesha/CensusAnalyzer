@@ -1,7 +1,8 @@
 package com.censusAnalyzer
 
+
 object CSVBuilderFactory {
-  def createCSVBuilder(): CSVBuilderTrait = {
+  def createCSVBuilder():CSVBuilderTrait = {
     new OpenCSVBuilder()
   }
 }
