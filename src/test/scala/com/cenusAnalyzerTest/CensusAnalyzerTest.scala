@@ -12,18 +12,18 @@ class CensusAnalyzerTest extends FunSuite {
   val InvalidHeaderFilePath = "/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusDataInvalidField.csv"
   val CensusAnalyzerObj = new CensusAnalyzer()
 
-  test("MatchingNumberOfRows_Input_CSVFileWithRightPath_ReturnNumberOfRows"){
+  test("givenIndianCensusCSVFileShouldReturnCorrectRecords"){
     assert(CensusAnalyzerObj.loadCSVInfo(IndiaCensusCSVFilePath) === 29)
   }
 
-  test("IfFilePathIsWrong_ReturnsIncorrectFilePathException") {
+  test("givenIndianCensusDataCSVFileWhenWithWrongFilePathShouldThrowException") {
     val thrown = intercept[Exception] {
       CensusAnalyzerObj.loadCSVInfo(WrongCSVFilePath)
     }
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectPath.toString)
   }
 
-  test("IfFileTypeIsWrong_ReturnsIncorrectFileException") {
+  test("givenIndianCensusDataCSVFileWhenWithWrongFileTypeShouldThrowException") {
     val thrown = intercept[Exception] {
       CensusAnalyzerObj.loadCSVInfo(WrongCSVFileTypePath)
     }
@@ -37,7 +37,7 @@ class CensusAnalyzerTest extends FunSuite {
     assert(thrown.getMessage === CensusAnalyzerExceptionEnum.InCorrectDelimiter.toString)
   }
 
-  test("IfInputFileFieldsWrong_ReturnsIncorrectFieldsException") {
+  test("givenIndianCensusDataCSVFileWhenWithWrongDelimitersShouldThrowException") {
     val thrown = intercept[Exception] {
       CensusAnalyzerObj.loadCSVInfo(InvalidHeaderFilePath)
     }
