@@ -4,6 +4,7 @@ import java.nio.file.{Files, NoSuchFileException, Paths}
 import java.util
 
   class CensusLoader {
+
     def loadData[A](country: Country, filePaths: Seq[String]): Map[String, CensusDAO] = {
       try {
         for (filePath <- filePaths) {
