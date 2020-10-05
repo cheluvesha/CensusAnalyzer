@@ -79,7 +79,7 @@ class CensusAnalyzerTest extends FunSuite {
     val throws = intercept[Exception] {
       CensusObj.loadIndiaStateCode(IndiaStateCodeInvalidCSVHeaderFilePath)
     }
-    assert(throws.getMessage == CensusAnalyzerExceptionEnums.UnableToParse.toString)
+    assert(throws.getMessage === CensusAnalyzerExceptionEnums.UnableToParse.toString)
   }
 
   test("givenIndianCensusDataWhenSortedByStateShouldReturnSortedResult"){
