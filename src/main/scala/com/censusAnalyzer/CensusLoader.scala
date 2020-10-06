@@ -3,8 +3,14 @@ import com.censusAnalyzer.Country.Country
 import java.nio.file.{Files, NoSuchFileException, Paths}
 import java.util
 
+/***
+ * Class Loads Data by calling DAO class
+ */
   class CensusLoader {
-
+  /***
+   * Function Loads Data for respective calls
+   * @return Map key value pair type value
+   */
     def loadData[A](country: Country, filePaths: Seq[String]): Map[String, CensusDAO] = {
       try {
         for (filePath <- filePaths) {
@@ -20,8 +26,8 @@ import java.util
           censusCSVIteratorStateCensus.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO)) }
         }
         else if (country.equals(Country.USA)) {
-          val UScensusCSVIterator: util.Iterator[USCensusDTO] = csvBuilderStateCensus.getCSVFileIterator(readerStateCensus, classOf[USCensusDTO])
-          UScensusCSVIterator.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO)) }
+          val USCensusCSVIterator: util.Iterator[USCensusDTO] = csvBuilderStateCensus.getCSVFileIterator(readerStateCensus, classOf[USCensusDTO])
+          USCensusCSVIterator.forEachRemaining { objDAO => censusMap += (objDAO.state -> new CensusDAO(objDAO)) }
         }
         else {
           throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.InvalidCountry)
@@ -38,6 +44,10 @@ import java.util
       }
     }
 
+  /***
+   * Function Loads Data for StateCode
+   * @return Map key value pair type value
+   */
     def loadStateCode(censusMap: Map[String, CensusDAO], filePath: String): Map[String, CensusDAO] = {
       try {
         val readerStateCode = Files.newBufferedReader(Paths.get(filePath))

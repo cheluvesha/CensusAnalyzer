@@ -2,6 +2,9 @@ package com.censusAnalyzer
 
 import com.opencsv.bean.CsvBindByName
 
+/***
+ * class Binds Data to form Json format
+ */
 class USCensusDTO {
   @CsvBindByName(required = true,column = "State Id")
   var stateId:String = _
@@ -30,6 +33,7 @@ class USCensusDTO {
   @CsvBindByName(required = true,column = "Housing Density")
   var housingDensity:Double = 0
 
+  // overrides objects to form string representation of an object
   override def toString: String = "USCensusCSV{" +
     "StateID= " + stateId + "\n" +
     "State= " + state + "\n" +

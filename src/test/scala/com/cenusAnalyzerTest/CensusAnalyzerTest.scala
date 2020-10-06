@@ -4,6 +4,10 @@ import com.censusAnalyzer.{CensusAnalyzer, CensusAnalyzerExceptionEnums, Country
 import com.google.gson.Gson
 import org.scalatest.FunSuite
 
+/***
+ * Test Use case Class which extends FunSuite scala test class
+ */
+
 class CensusAnalyzerTest extends FunSuite {
 
   val IndiaCensusCSVFilePath = "/home/cheluvesha/IdeaProjects/CensusAnalyzer/src/test/Resources/IndiaStateCensusData.csv"

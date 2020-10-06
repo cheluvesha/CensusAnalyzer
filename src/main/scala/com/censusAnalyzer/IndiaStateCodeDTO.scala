@@ -3,6 +3,9 @@ package com.censusAnalyzer
 
 import com.opencsv.bean.CsvBindByName
 
+/***
+ * class Binds Data to form Json format
+ */
 class IndiaStateCodeDTO {
 
 
@@ -15,6 +18,7 @@ class IndiaStateCodeDTO {
   @CsvBindByName(column = "StateCode", required = true)
   var stateCode: String = _
 
+  // overrides objects to form string representation of an object
   override def toString: String = "IndiaStateCodeCSV{" +
     "SrNo='" + SrNo + '\'' +
     ", state='" + stateName + '\'' +
