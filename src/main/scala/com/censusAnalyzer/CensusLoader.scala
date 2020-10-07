@@ -5,10 +5,13 @@ import java.util
 
 /***
  * Class Loads Data by calling DAO class
+ * Added CSV builder JAR in the project target
  */
   class CensusLoader {
   /***
    * Function Loads Data for respective calls
+   * Stores Collection Map data structure
+   * Implements Iterator to Iterate the collection objects
    * @return Map key value pair type value
    */
     def loadData[A](country: Country, filePaths: Seq[String]): Map[String, CensusDAO] = {
@@ -46,6 +49,8 @@ import java.util
 
   /***
    * Function Loads Data for StateCode
+   * Stores Collection Map data structure
+   * uses Iterator to Iterate the collection objects
    * @return Map key value pair type value
    */
     def loadStateCode(censusMap: Map[String, CensusDAO], filePath: String): Map[String, CensusDAO] = {

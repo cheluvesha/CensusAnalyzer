@@ -6,6 +6,8 @@ import org.scalatest.FunSuite
 
 /***
  * Test Use case Class which extends FunSuite scala test class
+ * Added ScalaTest dependency in Build.sbt
+ * Uses Gson and CSV dependencies
  */
 
 class CensusAnalyzerTest extends FunSuite {

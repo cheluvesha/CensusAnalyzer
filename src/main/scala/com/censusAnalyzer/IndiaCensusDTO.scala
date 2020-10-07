@@ -3,6 +3,7 @@ package com.censusAnalyzer
 import com.opencsv.bean.CsvBindByName
 /***
  * class Binds Data to form Json format
+ * Uses OpenCSV dependency which is added to build.sbt
  */
 class IndiaCensusDTO() {
 

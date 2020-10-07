@@ -6,8 +6,12 @@ import com.google.gson.Gson
 /***
  * Class performs sorting and imports Gson dependency in order to convert data into
  * json and vice versa
+ * used gson dependency added to build.sbt
  */
 class CensusAnalyzer {
+  /***
+   * used Map collection to store key value pair
+   */
   var censusMap: Map[String, CensusDAO] = Map()
   def loadCensusData(country: Country,filepath:String*): Int = {
     censusMap = new CensusLoader().loadData(country,filepath)
@@ -23,6 +27,7 @@ class CensusAnalyzer {
     if (censusMap == null || censusMap.isEmpty) {
       throw new CensusAnalyserException(CensusAnalyzerExceptionEnums.NoCensusData)
     }
+    // Array data structure to store CSV object
     var censusCSVList = censusMap.values.toArray
     censusCSVList = choice match {
       case 1 => censusCSVList.sortBy(_.state)
