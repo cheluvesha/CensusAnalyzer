@@ -6,3 +6,7 @@ scalaVersion := "2.12.7"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 
+libraryDependencies += "com.opencsv" % "opencsv" % "5.1"
+
+libraryDependencies += "com.google.code.gson" % "gson" % "2.8.5"
+
